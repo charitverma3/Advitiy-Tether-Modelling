@@ -5,7 +5,7 @@
 clear;
 clc;
 
-step_size=0.001; %time step for simulation
+step_size=0.01; %time step for simulation
 time_i=0; %start time of simulation
 time_f=1; %end time of simulation
 time = time_i : step_size : time_f; %array of time
@@ -22,13 +22,9 @@ z=zeros(1,(time_f-time_i)/step_size +1,'double'); %z co-ordinate of position w.r
 
 V = zeros((time_f-time_i)/step_size +1, 3, 'double'); %velocity as a functoin of time
 pos = zeros((time_f-time_i)/step_size +1, 3, 'double'); %position as a functoin of time
-V_cm = zeros((time_f-time_i)/step_size +1, 3, 'double');
-pos_cm = zeros((time_f-time_i)/step_size +1, 3, 'double');
-eps = zeros(1,(time_f-time_i)/step_size +1,'double');
-
-vx(1)=0;
-vy(1)=7.3176e3;
-vz(1)=0;
+%V_cm = zeros((time_f-time_i)/step_size +1, 3, 'double');
+%pos_cm = zeros((time_f-time_i)/step_size +1, 3, 'double');
+%eps = zeros(1,(time_f-time_i)/step_size +1,'double');
 
 x(1)=5.1e5+6.4e6;                  % limit of igrtime_fmagm is 600 km as height
 y(1)=0;
@@ -39,6 +35,9 @@ G=6.67e-11; %universal gravitational constant, SI
 M=5.7e24; %mass of earth, kg
 Mt=10;   %total mass of system, kg
 
+vx(1)=0;
+vy(1)=sqrt(G*M/x(1));
+vz(1)=0;
 
 V(1,:)=[vx(1) vy(1) vz(1)];
 R=6.4e6; %radius of earth, m
@@ -67,10 +66,10 @@ for n=1:(time_f-time_i)/step_size
 
     
     %[x(n) y(n) z(n)] = pos(n,:);
-    pos1 = [x(n) y(n) z(n)]; %defined ofor convenience
+    pos1 = [x(n) y(n) z(n)]; %defined for convenience
     dist = norm(pos1,2); 
-    dist_cm = norm(pos_cm(n,:),2);
-    eps(n) = dist_cm - norm([x(1) y(1) z(1)],2);
+    %dist_cm = norm(pos_cm(n,:),2);
+    %eps(n) = dist_cm - norm([x(1) y(1) z(1)],2);
     height=dist-R; %height of satellite from earth's surface
     
     %latitude calculation given position, theta is latitude
@@ -99,9 +98,9 @@ for n=1:(time_f-time_i)/step_size
     for i=1:nL
         dL_cap = L_vector/L;
         dL_vector = dL_cap*dL;
-        B = igrfmagm(height - l, theta, alpha, decyear(2016,5,1),12 );
+        B = igrfmagm(height - l, theta, alpha, decyear(2016,5,1) + n*step_size,12 );
         B = B*1e-9; %convert nanotesla to tesla
-       %B = B*0; %inserted fot testing purpose
+        %B = B*0; %inserted fot testing purpose
         dF = dot(dL_cap, cross(V(n,:), B))*(cross(dL_vector,B));
         dF = dF/rho;
         F = F + dF;
@@ -109,7 +108,7 @@ for n=1:(time_f-time_i)/step_size
     end
     %solns is the vector of (x,y,z,xdot,ydot,zdot)and times is time array
     %for rk4
-    
+    %F = F*0;
     f=@(times,soln)[soln(4);soln(5);soln(6); -G*M*soln(1)/(soln(1)^2+soln(2)^2+soln(3)^2)^1.5 + dot(F,xo)/Mt ;-G*M*soln(2)/(soln(1)^2+soln(2)^2+soln(3)^2)^1.5 + dot(F,yo)/Mt ; -G*M*soln(3)/(soln(1)^2+soln(2)^2+soln(3)^2)^1.5 + dot(F,zo)/Mt];
     [times_output,soln_output]=ode45(f,[n*step_size, (n+1)*step_size],[x(n),y(n),z(n),vx(n),vy(n),vz(n)]);
     %initial conditions for every iteration given
