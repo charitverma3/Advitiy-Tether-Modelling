@@ -4,10 +4,10 @@
 
 clear;
 clc;
-
+tic
 step_size=0.01; %time step for simulation
 time_i=0; %start time of simulation
-time_f=1; %end time of simulation
+time_f=86400; %end time of simulation
 time = time_i : step_size : time_f; %array of time
 nL = 5; %number of parts length of tether is divided for euler integration of force
 
@@ -64,7 +64,7 @@ array_a2=zeros(1,(time_f-time_i)/step_size);
 
 for n=1:(time_f-time_i)/step_size
 
-    
+    n
     %[x(n) y(n) z(n)] = pos(n,:);
     pos1 = [x(n) y(n) z(n)]; %defined for convenience
     dist = norm(pos1,2); 
@@ -98,7 +98,7 @@ for n=1:(time_f-time_i)/step_size
     for i=1:nL
         dL_cap = L_vector/L;
         dL_vector = dL_cap*dL;
-        B = igrfmagm(height - l, theta, alpha, decyear(2016,5,1) + n*step_size,12 );
+        B = igrfmagm(height - l, theta, alpha, decyear(2016,5,1),12 );
         B = B*1e-9; %convert nanotesla to tesla
         %B = B*0; %inserted fot testing purpose
         dF = dot(dL_cap, cross(V(n,:), B))*(cross(dL_vector,B));
@@ -146,6 +146,6 @@ plot(time,radius)
 xlabel('time')
 
 
-
+toc
 
 
