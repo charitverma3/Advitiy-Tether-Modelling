@@ -52,13 +52,8 @@ function [ F,e1] = Fb(x,t)
     
     function [dF] = dF_b(height)
         %tic
-        if lat<=90 && lat>=89.99 
-            B = igrfmagm(height, 89.99, lon, day,12 );
-        elseif lat >= -90 && lat<=-89.99
-            B = igrfmagm(height, -89.99, lon, day,12 );
-        else
-        B = igrfmagm(height, lat, lon, day,12 );
-        end
+        B = igrfmagm(day, lat, lon, height/1e3,'geod');
+        
         %toc
         B1 = B*1e-9; %convert from nanotesla to tesla
         [B(1), B(2), B(3)] = ned2ecef(B1(1),B1(2),B1(3),lat,lon,height,E);

@@ -17,7 +17,7 @@ nT = (time_f-time_i)/step_size;
 w_earth = 7.2921159e-5;
 G=6.67e-11; %universal gravitational constant, SI
 M=5.972e24; %mass of earth, kg
-R=6.4e6; %radius of earth, m
+R=6378.1e3; %radius of earth, m
 Mt=10;   %total mass of system, kg
 L=100; %length of tether, m
 %n=1; 
@@ -99,7 +99,7 @@ end
 toc
 %%
 for n=1:nT+1
-    r_cm(n) = norm(pos_cm(n,:),2);
+    r_cm(n) = norm(state_cm(n,1:3),2);
     r(n) = norm(pos(n,:),2);
 end
 
