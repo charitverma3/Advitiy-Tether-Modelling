@@ -52,7 +52,7 @@ function [ F,e1] = Fb(x,t)
     
     function [dF] = dF_b(height)
         %tic
-        B = igrfmagm(day, lat, lon, height/1e3,'geod');
+        B = igrf1(day, lat, lon, height/1e3,'geod');
         
         %toc
         B1 = B*1e-9; %convert from nanotesla to tesla
