@@ -10,7 +10,7 @@ clc;
 global step_size L nL nT G M R Mt mu_r w_earth day E;
 step_size=0.1; %time step for simulation
 time_i=0; %start time of simulation
-time_f=86400*2; %end time of simulation
+time_f=86400; %end time of simulation
 time = time_i : step_size : time_f; %array of time
 nL = 1; %number of parts length of tether is divided for euler integration of force
 nT = (time_f-time_i)/step_size;
@@ -23,7 +23,8 @@ L=100; %length of tether, m
 %n=1; 
 dL = L/nL; 
 mu_r = 0.05*2; %resistance per unit length of tether, ohm/m
-day = decyear(2017,5,30);
+%day = decyear(2017,5,30); %for igrfmagm
+day = datenum(2017,5,30); %for igrf1
 E = referenceSphere('earth', 'm'); %for NED to ECEF
 F = [0,0,0];
 %vx = zeros(1,(time_f-time_i)/step_size +1,'double');
@@ -103,6 +104,7 @@ for n=1:nT+1
     r(n) = norm(pos(n,:),2);
 end
 
+save equatorial.mat
 %%
 % 
 % 

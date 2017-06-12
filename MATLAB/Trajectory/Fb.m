@@ -6,12 +6,15 @@ function [ F,e1] = Fb(x,t)
     
     dL = L/nL;
     pos = [x(1) x(2) x(3)];
-    v = [x(4) x(5) x(6)];
+    v_i = [x(4) x(5) x(6)];
+    v_e = ecif2ecef(v_i,t);
     dist = norm(pos,2);
     dL_cap = pos/dist;
+    dL_cap_e = ecif2ecef(dL_cap,t);
     pos1 = ecif2ecef(pos,t);
     [lat, lon] = latlon(pos1);
     dL_vector = dL_cap*dL;
+    dL_vector_e = ecif2ecef(dL_vector,t);
     F = [0,0,0];
     height = dist - R;
     e1 = 0;
@@ -49,18 +52,20 @@ function [ F,e1] = Fb(x,t)
     %x axis is intersection of 0 longitude and 0 latitutde
 
     end
+
+
     
-    function [dF] = dF_b(height)
+    function [dF_i] = dF_b(height)
         %tic
         B = igrf1(day, lat, lon, height/1e3,'geod');
         
         %toc
         B1 = B*1e-9; %convert from nanotesla to tesla
-        [B(1), B(2), B(3)] = ned2ecef(B1(1),B1(2),B1(3),lat,lon,height,E);
-        B = ecef2ecif(B,t);
-        e1 = dot(dL_cap, cross(v, B));
-        dF = e1*(cross(dL_vector,B));
-        dF = dF/mu_r;
+        B = ned2ecef1(B1,lat,lon,height);
+        e1 = dot(dL_cap_e, cross(v_e, B));
+        dF_e = e1*(cross(dL_vector_e,B));
+        dF_e = dF_e/mu_r;
+        dF_i = ecef2ecif(dF_e,t);
     end
     
 end
