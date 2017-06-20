@@ -10,14 +10,14 @@ clc;
 global step_size L nL nT G M R Mt mu_r w_earth day E;
 step_size=0.1; %time step for simulation
 time_i=0; %start time of simulation
-time_f=86400; %end time of simulation
+time_f=86400*2; %end time of simulation
 time = time_i : step_size : time_f; %array of time
 nL = 1; %number of parts length of tether is divided for euler integration of force
 nT = (time_f-time_i)/step_size;
 w_earth = 7.2921159e-5;
 G=6.67e-11; %universal gravitational constant, SI
 M=5.972e24; %mass of earth, kg
-R=6378.1e3; %radius of earth, m
+R=6371.8e3; %radius of earth, m
 Mt=10;   %total mass of system, kg
 L=100; %length of tether, m
 %n=1; 
@@ -56,13 +56,13 @@ y(1)=0;
 z(1)=0;
 pos(1,:) = [x(1), y(1), z(1)];
 %velocities for 98 degree orbit
-% vx(1)=0;
-% vy(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2))*cos(98*pi/180);
-% vz(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2))*sin(98*pi/180);
-%velocities for equatorial
 vx(1)=0;
-vy(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2));
-vz(1)=0;
+vy(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2))*cos(98*pi/180);
+vz(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2))*sin(98*pi/180);
+%velocities for equatorial
+% vx(1)=0;
+% vy(1)=sqrt(G*M/norm([x(1),y(1),z(1)],2));
+% vz(1)=0;
 V(1,:)=[vx(1) vy(1) vz(1)];
 state(1,:) = [x(1), y(1), z(1), vx(1), vy(1), vz(1)];
 state_cm(1,:) = [x(1), y(1), z(1), vx(1), vy(1), vz(1)];
@@ -77,17 +77,17 @@ soln_output_log=zeros(6,(time_f-time_i)/step_size); %for RK4(ode45) solver
 %%
 tic
 for n=1:nT
-    if mod(n,100)==0
+    if mod(n,1000)==0
         n/10
     end
     
     t = time(n);
-    [~,emf(n)] = Fb(state_cm(n,:),t);
-    
-    %[~,soln] = ode45(@(t,soln)dyn2(t,soln,F), [n*step_size, (n+1)*step_size], state(n,:)');
-    %state(n+1,:) = soln(end,:);
-    %pos(n+1,:) = state(n+1,1:3);
-    %energy(n+1) = 0.5*Mt*(norm(state(n+1,4:6),2))^2 - G*M*Mt/norm(state(n+1,1:3),2);
+    [F,emf(n)] = Fb(state_cm(n,:),t);
+    emf(n) = emf(n)*L;
+    [~,soln] = ode45(@(t,soln)dyn2(t,soln,F), [n*step_size, (n+1)*step_size], state(n,:)');
+    state(n+1,:) = soln(end,:);
+    pos(n+1,:) = state(n+1,1:3);
+    energy(n+1) = 0.5*Mt*(norm(state(n+1,4:6),2))^2 - G*M*Mt/norm(state(n+1,1:3),2);
     [~,soln1] = ode45(@(t,soln1)dyn2(t,soln1,[0,0,0]), [n*step_size, (n+1)*step_size], state_cm(n,:)');
     state_cm(n+1,:) = soln1(end,:);
     pos_cm(n+1,:) = state_cm(n+1,1:3);
@@ -104,7 +104,7 @@ for n=1:nT+1
     r(n) = norm(pos(n,:),2);
 end
 
-save equatorial.mat
+save 98degree.mat
 %%
 % 
 % 

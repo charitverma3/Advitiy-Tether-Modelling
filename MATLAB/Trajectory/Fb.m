@@ -57,15 +57,19 @@ function [ F,e1] = Fb(x,t)
     
     function [dF_i] = dF_b(height)
         %tic
-        B = igrf1(day, lat, lon, height/1e3,'geod');
+        B = igrf1(day, lat, lon, height/1e3,'geod'); %height in km
         
         %toc
         B1 = B*1e-9; %convert from nanotesla to tesla
         B = ned2ecef1(B1,lat,lon,height);
-        e1 = dot(dL_cap_e, cross(v_e, B));
+        e1 = dot(dL_cap_e, cross(v_e, B)); %this is actually emf/L 
         dF_e = e1*(cross(dL_vector_e,B));
         dF_e = dF_e/mu_r;
         dF_i = ecef2ecif(dF_e,t);
+%         e1 = dot(dL_cap, cross(v_i, B)); %this is actually emf/L 
+%         dF_i = e1*(cross(dL_vector,B));
+%         dF_i = dF_i/mu_r;
+        
     end
     
 end
