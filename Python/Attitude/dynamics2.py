@@ -1,4 +1,6 @@
 import numpy as np
+import qnv
+from constants import *
 
 def dynamics(state,v_Fb_i, v_Tb_b):
 #dynamic equations when magnetic field is assumend constant between t and t+dt for computational ease 
@@ -10,11 +12,11 @@ def dynamics(state,v_Fb_i, v_Tb_b):
 	a = v_F_i/Ms #acceleration in inertial frame
 
 	q = state[7:11]
-	omega = state[11:13]
+	omega = state[11:14]
+	omega_q = np.vstack(([0.],omega))
+	q_dot = 0.5*qnv.quatMultiply(q,omega_q)
+	omega_dot = np.dot(m_Inertia_inv,(v_T_b - qnv.cross1(omega, np.dot(m_Inertia,omega))))
 
-	q_dot = 0.5*q*omega
-	omega_dot = inv(m_Inertia)*(v_T_b - cross(omega, m_Inertia*omega))
-
-	y = [state(4:6);a;q_dot;omega_dot]
+	y = np.vstack((state[4:7],a,q_dot,omega_dot))
 
 	return y

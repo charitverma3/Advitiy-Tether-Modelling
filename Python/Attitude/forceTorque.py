@@ -1,12 +1,11 @@
 import numpy as np
-import qnv
+import qnv as qnv
 import frames as fs
+from constants import *
+from pyigrf12 import runigrf12
 
 def gravityForceTorque(state):
 	#gives force in ECIF and torque in body frame due to gravity
-
-
-	v_L_b = 
 	v_dL = v_L_b/nLg
 	dL = np.linalg.norm(v_dL)
 	dm = mu_m*dL
@@ -18,15 +17,15 @@ def gravityForceTorque(state):
 	v_pos_sat_b = qnv.quatRotate(q,v_pos_sat_i)
 
 	if nLg>1 :
-		for i in (1:nLg/2) :
+		for i in range(1,nLg/2+1) :
 
 			v_F_i, v_T_b = simpsonG(v_F_i,v_T_b,4,g_dFdT,dm,(2*i-1),v_dL,v_pos_sat_b,q)
 			
-		for i in (2:nLg/2) : 
+		for i in range(2,nLg/2+1) : 
 
-			v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,2,g_dFdT,dm,(2*i-2)v_dL,v_pos_sat_b,q)
+			v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,2,g_dFdT,dm,(2*i-2),v_dL,v_pos_sat_b,q)
 			
-		for i = [1,nLg]:
+		for i in [1,nLg]:
 			
 			v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,1,g_dFdT,dm,i,v_dL,v_pos_sat_b,q) 
 
@@ -47,7 +46,7 @@ def g_dFdT(dm,v_pos_sat_b,v_pos_dL_b,q):
 	#gives differential force in ECIF and differential torque in body frame due to gravity
 	
 	v_dF_b = dm*(g_da(v_pos_sat_b,v_pos_dL_b)
-	v_dF_i = rotate(q,v_dF_b)
+	v_dF_i = qnv.quatRotate(q,v_dF_b)
 	v_dT_b = qnv.cross1(v_pos_dL_b,v_dF_b)
 	return v_dF_i, v_dT_b
 
@@ -58,7 +57,7 @@ def magneticForceTorque(state,t):
 	v_pos_sat_i = state[1:3].copy()
 	v_pos_sat_b = qnv.quatRotate(qi, v_pos_sat_i)
 	v_v_sat_i = state[4:6].copy()
-	v_L_b = 
+	
 	v_L_i = qnv.quatRotate(q,v_L_b)
 	v_dL_i = v_L_i/nLb
 	v_dL_cap_i = v_dL_i/np.linalg.norm(v_dL_i)
@@ -92,7 +91,9 @@ def m_dFdT(v_pos_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL):
 		height = np.norm(v_pos_dL_i) - R
 		v_pos_dL_e = fs.ecif2ecef(v_pos_dL_i,t)
 		lat, lon = fs.latlon(v_pos_dL_e)
-		v_B_n = igrf
+		B = runigrf12(day,0,1,height,lat,lon)
+		v_B_n = np.vstack((B[0],B[1], B[2]))
+		v_B_n = v_B_n*1e-9 #convert from nT to T
 		v_B_e = fs.ned2ecef(lat,lon)
 		v_dL_cap_e = fs.ecif2ecef(v_dL_cap_i,t)
 		v_v_sat_e = qnv.quatRotate(q,v_v_sat_i)

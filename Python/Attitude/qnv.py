@@ -24,10 +24,10 @@ def quatMultiply(q1,q2):
 	a1 = q1[0:1].copy()
 	a2 = q2[0:1].copy()
 
-	b1 = (q1[1:4].copy()).reshape((1,3))
-	b2 = (q2[1:4].copy()).reshape((1,3))
-
-	a = a1 + a2 - dot(b1,b2)
+	b1 = (q1[1:4].copy()).reshape(3,)
+	b2 = (q2[1:4].copy()).reshape(3,)
+	
+	a = a1 + a2 - np.dot(b1,b2)
 	b = a1*b2 + a2*b1 + np.cross(b1,b2)
 
 	b = b.reshape((3,1))
@@ -47,5 +47,9 @@ def quatRotate(q,x):
 	x2 = y[1:4]
 	return x2
 
+if __name__ == "__main__":
+	qI = np.array([[1.], [0.], [0.], [0.]])
+	x = np.array([[2.], [3.], [4.]])
+	y = quatRotate(qI,x)
 
 
