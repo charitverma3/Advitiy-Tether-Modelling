@@ -1,13 +1,13 @@
 import numpy as np
 
-def crossCol(v1,v2):
+def cross1(v1,v2):
 	#for cross product of 2 column vectors
 
 	v3 = v1.reshape((1,3))
 	v4 = v2.reshape((1,3))
 	v5 = np.cross(v3,v4)
-	v5 = np.reshape((3,1))
-	return v5
+	v6 = v5.reshape((3,1))
+	return v6
 
 
 def quatInv(q):
@@ -48,8 +48,7 @@ def quatRotate(q,x):
 	return x2
 
 if __name__ == "__main__":
-	qI = np.array([[1.], [0.], [0.], [0.]])
-	x = np.array([[2.], [3.], [4.]])
-	y = quatRotate(qI,x)
+	pass
+
 
 

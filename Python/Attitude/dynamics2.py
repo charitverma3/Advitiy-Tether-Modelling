@@ -7,7 +7,7 @@ def dynamics(state,v_Fb_i, v_Tb_b):
 	v_Fg_i, v_Tg_b = gravityForceTorque(state)
 	
 	v_F_i = v_Fb_i + v_Fg_i
-	v_T_b = v_Tb_b _ v_Tg_b
+	v_T_b = v_Tb_b + v_Tg_b
 
 	a = v_F_i/Ms #acceleration in inertial frame
 

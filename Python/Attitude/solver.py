@@ -27,18 +27,18 @@ def rk42(x0,h,F,T):
 def simpsonG(F,T,k,g_dFdT,dm,i,v_dL,v_pos_sat_b,q):
 	
 	v_pos_dL_b = i*v_dL
-	v_dF_i, v_dT_b = k*g_dFdT(dm,v_pos_sat_b,v_pos_dL_b,q)
-	F1 = F + v_dF_i
-	T1 = T + v_dT_b
+	v_dF_i, v_dT_b = g_dFdT(dm,v_pos_sat_b,v_pos_dL_b,q)
+	F1 = F + k*v_dF_i
+	T1 = T + k*v_dT_b
 
 	return F1,T1
 
 def simpsonM(F,T,k,m_dFdT,i,v_pos_sat_b,v_dL,v_dL_cap_i,v_v_sat_i,q,t,dL):
 
 	v_pos_dL_b = v_pos_sat_b + i*v_dL
-	v_dF_i, v_dT_i = k*m_dFdT(v_pos_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
-	F1 = F + v_dF_i
-	T1 = T + v_dT_b
+	v_dF_i, v_dT_i = m_dFdT(v_pos_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
+	F1 = F + k*v_dF_i
+	T1 = T + k*v_dT_b
 
 	return F1, T1
 
