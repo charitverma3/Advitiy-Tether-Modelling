@@ -1,6 +1,7 @@
 import numpy as np
 import datetime as dt
-
+import math
+import qnv
 w_earth = 7.2921159e-5; #rad per second
 G=6.67e-11; #universal gravitational constant, SI
 M=5.972e24; #mass of earth, kg
@@ -21,12 +22,20 @@ m_Inertia_inv = np.linalg.inv(m_Inertia)
 
 nLb = 1
 nLg = 1
-pi = np.pi
 Ms = 10
-mu_m = 0.01
+mu_m = 0.
 mu_r = 0.1
 
-
+m_eu0 = np.array([[0,0,-1], [1,0,0], [0,-1,0]])
+q0 = qnv.rotm2quat(m_eu0)
+q0 = q0.reshape((4,1))
+pos0 = np.array([[R],[0.],[0.]])
+dist0 = np.linalg.norm(pos0)
+v0 = np.array([[0],[math.sqrt(G*M/dist0)],[0]])
+#v0 = np.array([[0],[math.sqrt(G*M/dist0)*math.sin(math.radians(98))],[math.sqrt(G*M/dist0)*math.cos(math.radians(98))]])
+w0 = np.array([[0],[-1*math.sqrt(G*M/dist0**3)],[0]]) 
+#w0 = np.array([[0.], [0.], [0.]])
+state0 = np.vstack((pos0,v0,q0,w0))
 
 
 
