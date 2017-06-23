@@ -71,7 +71,6 @@ def rotm2quat(A):
 
 	elif(qm==q2):
 		q2 = math.sqrt(q2)/2
-		print q2
 		q1 = (A[2,1] - A[1,2])/(4*q2)
 		q3 = (A[0,1] + A[1,0])/(4*q2)
 		q4 = (A[0,2] + A[2,0])/(4*q2)

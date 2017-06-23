@@ -9,7 +9,7 @@ function [ F,e1] = Fb(x,t)
     v_i = [x(4) x(5) x(6)];
     v_e = ecif2ecef(v_i,t);
     dist = norm(pos,2);
-    dL_cap = pos/dist;
+    dL_cap = -pos/dist;
     dL_cap_e = ecif2ecef(dL_cap,t);
     pos1 = ecif2ecef(pos,t);
     [lat, lon] = latlon(pos1);
@@ -62,7 +62,7 @@ function [ F,e1] = Fb(x,t)
         %toc
         B1 = B*1e-9; %convert from nanotesla to tesla
         B = ned2ecef1(B1,lat,lon,height);
-        e1 = dot(dL_cap_e, cross(v_e, B)); %this is actually emf/L 
+        e1 = dot(dL_cap_e, cross(v_e, B)); %thisfor is actually emf/L 
         dF_e = e1*(cross(dL_vector_e,B));
         dF_e = dF_e/mu_r;
         dF_i = ecef2ecif(dF_e,t);

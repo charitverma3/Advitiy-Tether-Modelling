@@ -16,7 +16,7 @@ def dynamics2(state,v_Fb_i, v_Tb_b):
 	omega_q = np.vstack(([0.],omega))
 	q_dot = 0.5*qnv.quatMultiply(q,omega_q)
 	omega_dot = np.dot(m_Inertia_inv,(v_T_b - qnv.cross1(omega, np.dot(m_Inertia,omega))))
-	omega_dot = omega_dot*0
+	#omega_dot = omega_dot*0
 	y = np.vstack((state[3:6],a,q_dot,omega_dot))
 	
 	return y

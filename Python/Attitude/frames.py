@@ -9,7 +9,7 @@ def latlon(x):
 	# longitude calculation given position, lon is longitude
 	if x[1]==0:
 		if x[0]>=0 :
-			lon = 0
+			lon = 0.0
 		else:
 			lon = pi
 

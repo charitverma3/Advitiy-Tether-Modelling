@@ -6,6 +6,7 @@
 
 clear;
 clc;
+%%
 %global variables
 global step_size L nL nT G M R Mt mu_r w_earth day E;
 step_size=0.1; %time step for simulation
@@ -26,6 +27,7 @@ mu_r = 0.05*2; %resistance per unit length of tether, ohm/m
 %day = decyear(2017,5,30); %for igrfmagm
 day = datenum(2017,5,30); %for igrf1
 E = referenceSphere('earth', 'm'); %for NED to ECEF
+%%
 F = [0,0,0];
 %vx = zeros(1,(time_f-time_i)/step_size +1,'double');
 %vy = zeros(1,(time_f-time_i)/step_size +1,'double');
@@ -82,7 +84,7 @@ for n=1:nT
     end
     
     t = time(n);
-    [F,emf(n)] = Fb(state_cm(n,:),t);
+    [F,emf(n)] = Fb(state(n,:),t);
     emf(n) = emf(n)*L;
     [~,soln] = ode45(@(t,soln)dyn2(t,soln,F), [n*step_size, (n+1)*step_size], state(n,:)');
     state(n+1,:) = soln(end,:);
@@ -104,7 +106,7 @@ for n=1:nT+1
     r(n) = norm(pos(n,:),2);
 end
 
-save 98degree.mat
+save 98degree2.mat
 %%
 % 
 % 
