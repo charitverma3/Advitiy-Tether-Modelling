@@ -20,21 +20,21 @@ def gravityForceTorque(state):
 	if nLg>1 :
 		for i in range(1,int(nLg/2+1)) :
 
-			v_F_i, v_T_b = simpsonG(v_F_i,v_T_b,4,g_dFdT,dm,(2*i-1),v_dL,v_pos_sat_b,q)
+			v_F_i, v_T_b = simpsonG(v_F_i.copy(),v_T_b.copy(),4,g_dFdT,dm,(2*i-1),v_dL,v_pos_sat_b,q)
 			
 		for i in range(2,int(nLg/2+1)) : 
 
-			v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,2,g_dFdT,dm,(2*i-2),v_dL,v_pos_sat_b,q)
+			v_F_i, v_T_b = simpsonG(v_F_i.copy(), v_T_b.copy(),2,g_dFdT,dm,(2*i-2),v_dL,v_pos_sat_b,q)
 			
 		for i in [1,int(nLg)]:
 			
-			v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,1,g_dFdT,dm,i,v_dL,v_pos_sat_b,q) 
+			v_F_i, v_T_b = simpsonG(v_F_i.copy(), v_T_b.copy(),1,g_dFdT,dm,i,v_dL,v_pos_sat_b,q) 
 
 		v_F_i = v_F_i/3
 		v_T_b = v_T_b/3
 
 	else:
-		v_F_i, v_T_b = simpsonG(v_F_i, v_T_b,1,g_dFdT,dm,nLg/2,v_dL,v_pos_sat_b,q) 	
+		v_F_i, v_T_b = simpsonG(v_F_i.copy(), v_T_b.copy(),1,g_dFdT,dm,nLg/2,v_dL,v_pos_sat_b,q) 	
 		
 
 	return v_F_i, v_T_b
@@ -49,6 +49,7 @@ def g_dFdT(dm,v_pos_sat_b,v_pos_dL_b,q):
 	v_dF_b = dm*(g_da(v_pos_sat_b,v_pos_dL_b))
 	v_dF_i = qnv.quatRotate(q,v_dF_b)
 	v_dT_b = qnv.cross1(v_pos_dL_b,v_dF_b)
+	#print v_dT_b.reshape((1,3))
 	return v_dF_i, v_dT_b
 
 
@@ -68,21 +69,21 @@ def magneticForceTorque(state,t):
 
 	if nLb>1 :
 		for i in range(1,nLb/2+1):
-			v_F_i, v_T_b = simpsonM(v_F_i, v_T_b,4,m_dFdT,(2*i-1),v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL) 
+			v_F_b, v_T_b = simpsonM(v_F_i.copy(), v_T_b.copy(),4,m_dFdT,(2*i-1),v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL) 
 			
 		for i in range(2,nLb/2+1):
-			v_F_i, v_T_b = simpsonM(v_F_i, v_T_b,2,m_dFdT,(2*i-2),v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
+			v_F_b, v_T_b = simpsonM(v_F_i.copy(), v_T_b.copy(),2,m_dFdT,(2*i-2),v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
 			
 		for i in [1,nLg]:
-			v_F_i, v_T_b = simpsonM(v_F_i, v_T_b,1,m_dFdT,i,v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
+			v_F_b, v_T_b = simpsonM(v_F_i.copy(), v_T_b.copy(),1,m_dFdT,i,v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
 
-		v_F_i = v_F_i/3
+		v_F_b = v_F_b/3
 		v_T_b = v_T_b/3
 
 	else:
-		v_F_i, v_T_b = simpsonM(v_F_i, v_T_b,1,m_dFdT,nLb/2,v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
+		v_F_b, v_T_b = simpsonM(v_F_i.copy(), v_T_b.copy(),1,m_dFdT,nLb/2,v_pos_sat_b,v_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL)
 
-	return v_F_i, v_T_b
+	return v_F_b, v_T_b
 
 
 def m_dFdT(v_pos_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL):
@@ -105,7 +106,7 @@ def m_dFdT(v_pos_dL_b,v_dL_cap_i,v_v_sat_i,q,t,dL):
 		v_dF_b = qnv.quatRotate(qi, v_dF_i)
 		v_dL_cap_b = v_L_b/np.linalg.norm(v_L_b)
 		v_dT_b = qnv.cross1(v_dL_cap_b, v_dF_b)
-		return v_dF_i, dL*v_dT_b
+		return v_dF_b, dL*v_dT_b
 
 
 

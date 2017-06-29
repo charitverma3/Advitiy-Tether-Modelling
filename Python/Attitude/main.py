@@ -6,11 +6,14 @@ import qnv
 from constants import * 
 import matplotlib.pyplot as plt
 import time
+import datetime
+import os
 #simulation variables
+#f_now = datetime.datetime.now.strftime('%Y-%m-%d %H:%M:%S')
 t1 = time.time()
-time_i = 0
+time_i = 0.
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 100
+time_f = 5000.
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -26,10 +29,15 @@ energy[0] = 0.5*Ms*(np.linalg.norm(state0[3:6]))**2 - G*M*Ms/(np.linalg.norm(sta
 
 for n in range(0,nT):
 	if (n%1000==0):
+		t2 = time.time()
+		t3 = t2 - t1
 		print n*step_size
+		print dot[n]
+		print t3
 	#Fg, Tg = ft.gravityForceTorque(state)
 	state_now = state[:,n].reshape((13,1))
 	Fm, Tm = ft.magneticForceTorque(state_now,s_time)
+
 	#Fm = np.zeros((3,1))
 	#Tm = np.zeros((3,1))
 	#print state_now
@@ -43,7 +51,11 @@ t2 = time.time()
 t3 = t2 - t1
 print t3
 
-plt.plot(r)
-plt.show()
+np.savetxt('state.csv',state,delimiter=',')
+np.savetxt('r.csv',r,delimiter=',')
+np.savetxt('energy.csv',energy,delimiter=',')
+np.savetxt('dot.csv',dot,delimiter=',')
+
+
 
 

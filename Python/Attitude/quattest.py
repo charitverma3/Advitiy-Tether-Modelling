@@ -12,6 +12,10 @@ def drdt(p):
 	v_dot = -G*M*p[0:3].reshape(3,1)/np.linalg.norm(p[0:3])**3
 	return np.vstack((p[3:6].reshape(3,1),v_dot))
 
+def drdt2(p,a):
+	v_dot = a
+	return np.vstack((p[3:6].reshape(3,1),v_dot))
+
 def rk4(x0,h,w):
 #range kutta order 4 solver
 	k1 = h*dqdt(x0,w)
@@ -29,6 +33,18 @@ def rk4a(p,h):
 	k2 = h*drdt(p+k1/2)
 	k3 = h*drdt(p+k2/2)
 	k4 = h*drdt(p+k3)
+	x1 = p.copy()
+	#print x1, k1
+	x1 = x1 + (k1 + 2*k2 + 2*k3 + k4)/6
+
+	return x1
+
+def rk4b(p,h):
+	a = -G*M*p[0:3].reshape(3,1)/np.linalg.norm(p[0:3])**3
+	k1 = h*drdt2(p,a)
+	k2 = h*drdt2(p+k1/2,a)
+	k3 = h*drdt2(p+k2/2,a)
+	k4 = h*drdt2(p+k3,a)
 	x1 = p.copy()
 	#print x1, k1
 	x1 = x1 + (k1 + 2*k2 + 2*k3 + k4)/6
@@ -61,7 +77,7 @@ pos1 = pos0
 s1 = np.vstack((pos0,v0))
 
 for n in range(0,nT):
-	if n%1000 == 0:
+	if n%10000 == 0:
 		print n*step_size
 	q2 = rk4(q1,step_size,np.vstack(([0.],w0)))
 	s2 = rk4a(s1, step_size)
