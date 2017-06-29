@@ -13,7 +13,7 @@ dir_now = os.path.normpath(datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 6e5
+time_f = 6e4
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)

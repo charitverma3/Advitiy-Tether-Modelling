@@ -10,21 +10,36 @@ day = dt.datetime(2017,5,30)
 L = 100. #length of tether in m
 v_L_b = L*np.array([[0.], [0.], [1.]])
 
-Ixx = .17007470856
-Iyy = .17159934710
-Izz = .15858572070
-Ixy = .00071033134
-Iyz = .00240388659
-Ixz = .00059844292
-m_Inertia = np.array([[Ixx, -1*Ixy, -1*Ixz], [-1*Ixy, Iyy, -1*Iyz], [-1*Ixz, -1*Iyz, Izz]])
-m_Inertia_inv = np.linalg.inv(m_Inertia)
-
-
+b = 1e-3
 nLb = 1.
 nLg = 1.
 Ms = 10.
 mu_m = 0.27/L
 mu_r = 0.1
+
+Ixxs = .17007470856
+Iyys = .17159934710
+Izzs = .15858572070
+Ixys = .00071033134
+Iyzs = .00240388659
+Ixzs = .00059844292
+
+Ixxt = mu_m*L*(b**2/12 + L**2/3)
+Iyyt = Ixxt
+Izzt = mu_m*L*(b**2/6)
+Ixyt = 0.
+Ixzt = 0.
+Iyzt = 0.
+
+Ixx = Ixxs + Ixxt
+Iyy = Iyys + Iyyt
+Izz = Izzs + Izzt
+Ixy = Ixys + Ixyt
+Ixz = Ixzs + Ixzt
+Iyz = Iyzs + Iyzt
+
+m_Inertia = np.array([[Ixx, -1*Ixy, -1*Ixz], [-1*Ixy, Iyy, -1*Iyz], [-1*Ixz, -1*Iyz, Izz]])
+m_Inertia_inv = np.linalg.inv(m_Inertia)
 
 incl = math.radians(98)
 
