@@ -6,7 +6,9 @@ import qnv
 from constants import * 
 import scipy.io as sio
 import time
+import datetime
 #simulation variables
+dir_now = datetime.datetime.now().
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
@@ -47,6 +49,10 @@ t2 = time.time()
 t3 = t2 - t1
 print t3
 
+
+os.chdir('Logs-With-Torque-2')
+os.mkdir(dir_now)
+os.chdir(dir_now)
 sio.savemat('state.mat', mdict={'state':state})
 sio.savemat('r.mat', mdict={'r':r})
 sio.savemat('dot.mat', mdict={'dot':dot})
