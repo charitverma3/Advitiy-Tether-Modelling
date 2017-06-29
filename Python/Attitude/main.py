@@ -4,7 +4,7 @@ import solver as slv
 import math
 import qnv
 from constants import * 
-import matplotlib.pyplot as plt
+import scipy.io as sio
 import time
 #simulation variables
 t1 = time.time()
@@ -25,7 +25,7 @@ energy[0] = 0.5*Ms*(np.linalg.norm(state0[3:6]))**2 - G*M*Ms/(np.linalg.norm(sta
 
 
 for n in range(0,nT):
-	if (n%1000==0):
+	if (n%10000==0):
 		t2 = time.time()
 		t3 = t2 - t1
 		print n*step_size
