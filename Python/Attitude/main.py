@@ -4,7 +4,7 @@ import solver as slv
 import math
 import qnv
 from constants import * 
-import matplotlib.pyplot as plt
+import scipy.io as sio
 import time
 import datetime
 import os
@@ -13,7 +13,7 @@ import os
 t1 = time.time()
 time_i = 0.
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 5000.
+time_f = 60000.
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -39,7 +39,7 @@ for n in range(0,nT):
 	Fm, Tm = ft.magneticForceTorque(state_now,s_time)
 
 	#Fm = np.zeros((3,1))
-	#Tm = np.zeros((3,1))
+	Tm = np.zeros((3,1))
 	#print state_now
 	state[:,n+1] = (slv.rk42(state_now, step_size, Fm, Tm)).reshape((1,13))
 	s_time = s_time + step_size
@@ -51,10 +51,11 @@ t2 = time.time()
 t3 = t2 - t1
 print t3
 
-np.savetxt('state.csv',state,delimiter=',')
-np.savetxt('r.csv',r,delimiter=',')
-np.savetxt('energy.csv',energy,delimiter=',')
-np.savetxt('dot.csv',dot,delimiter=',')
+sio.savemat('state.mat', mdict={'state':state})
+sio.savemat('r.mat', mdict={'r':r})
+sio.savemat('dot.mat', mdict={'dot':dot})
+sio.savemat('energy.mat', mdict={'energy':state})
+
 
 
 
