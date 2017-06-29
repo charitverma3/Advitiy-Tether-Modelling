@@ -10,7 +10,7 @@ import time
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 86400.
+time_f = 40000.
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -47,7 +47,9 @@ t2 = time.time()
 t3 = t2 - t1
 print t3
 
-plt.plot(r)
-plt.show()
+sio.savemat('state.mat', mdict={'state':state})
+sio.savemat('r.mat', mdict={'r':r})
+sio.savemat('dot.mat', mdict={'dot':dot})
+sio.savemat('energy.mat', mdict={'energy':energy})
 
 
