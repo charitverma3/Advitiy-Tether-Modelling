@@ -23,7 +23,7 @@ m_Inertia_inv = np.linalg.inv(m_Inertia)
 nLb = 1.
 nLg = 1.
 Ms = 10.
-mu_m = 0*0.27/L
+mu_m = 0.27/L
 mu_r = 0.1
 
 incl = math.radians(98)

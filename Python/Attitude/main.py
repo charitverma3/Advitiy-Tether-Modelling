@@ -7,12 +7,13 @@ from constants import *
 import scipy.io as sio
 import time
 import datetime
+import os
 #simulation variables
-dir_now = datetime.datetime.now().
+dir_now = os.path.normpath(datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S'))
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 40000.
+time_f = 6e5
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -21,7 +22,7 @@ energy = np.zeros(nT+1)
 state[:,0] = state0.reshape((1,13))
 s_time = time_i
 r = np.zeros((nT+1))
-r[0] = np.linalg.norm(state0[0:2])
+r[0] = np.linalg.norm(state0[0:3])
 dot[0] = np.dot((qnv.quatRotate(q0,v_L_b)).T, state0[0:3])/(L*np.linalg.norm(state0[0:3]))
 energy[0] = 0.5*Ms*(np.linalg.norm(state0[3:6]))**2 - G*M*Ms/(np.linalg.norm(state0[0:3])) 
 
