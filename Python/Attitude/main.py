@@ -22,7 +22,7 @@ energy = np.zeros(nT+1)
 state[:,0] = state0.reshape((1,13))
 s_time = time_i
 r = np.zeros((nT+1))
-r[0] = np.linalg.norm(state0[0:2])
+r[0] = np.linalg.norm(state0[0:3])
 dot[0] = np.dot((qnv.quatRotate(q0,v_L_b)).T, state0[0:3])/(L*np.linalg.norm(state0[0:3]))
 energy[0] = 0.5*Ms*(np.linalg.norm(state0[3:6]))**2 - G*M*Ms/(np.linalg.norm(state0[0:3])) 
 
@@ -54,7 +54,7 @@ print t3
 sio.savemat('state.mat', mdict={'state':state})
 sio.savemat('r.mat', mdict={'r':r})
 sio.savemat('dot.mat', mdict={'dot':dot})
-sio.savemat('energy.mat', mdict={'energy':state})
+sio.savemat('energy.mat', mdict={'energy':energy})
 
 
 

@@ -9,7 +9,7 @@ def dynamics(state,t):
 	v_T_b = v_Tb_b + v_Tg_b
 
 	a = v_F_i/Ms #acceleration in inertial frame
-
+	print Ms
 	q = state[7:11].copy()
 	omega = state[11:14].copy()
 
