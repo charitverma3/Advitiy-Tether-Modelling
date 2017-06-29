@@ -10,7 +10,7 @@ import time
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 10000
+time_f = 86400.
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -34,7 +34,7 @@ for n in range(0,nT):
 	#Fg, Tg = ft.gravityForceTorque(state)
 	state_now = state[:,n].reshape((13,1))
 	Fm, Tm = ft.magneticForceTorque(state_now,s_time)
-	Fm = np.zeros((3,1))
+	#Fm = np.zeros((3,1))
 	Tm = np.zeros((3,1))
 	#print state_now
 	state[:,n+1] = (slv.rk42(state_now, step_size, Fm, Tm)).reshape((1,13))
