@@ -12,7 +12,7 @@ v_L_b = L*np.array([[0.], [0.], [1.]])
 
 b = 1e-3
 nLb = 1.
-nLg = 1.
+nLg = 100.
 Ms = 10.
 mu_m = 0.27/L
 mu_r = 0.1
