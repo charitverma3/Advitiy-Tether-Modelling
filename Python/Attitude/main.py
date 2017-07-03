@@ -13,7 +13,7 @@ dir_now = os.path.normpath(datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')
 t1 = time.time()
 time_i = 0
 #time_f = math.pi/(2*math.sqrt(G*M/R**3))
-time_f = 86400.*2
+time_f = 80000.*2
 step_size = 0.1
 nT = int((time_f - time_i)/step_size)
 state = np.zeros((13,nT+1)) #state = (pos from earth in ECIF, velocity, quaternion, angular velocity wrt ECIF in body frame) quaternion rotates body frame vector into inertial frame and defined as (scalar,vector)
@@ -37,11 +37,14 @@ for n in range(0,nT):
 		print dot[n]
 	#Fg, Tg = ft.gravityForceTorque(state)
 	state_now = state[:,n].reshape((13,1))
-	Fm, Tm = ft.magneticForceTorque(state_now,s_time)
+	B = ft.getB(state_now,s_time)
+	
+	#Fm, Tm = ft.magneticForceTorque(state_now,s_time)
 	#Fm = np.zeros((3,1))
 	#Tm = np.zeros((3,1))
 	#print state_now
-	state[:,n+1] = (slv.rk42(state_now, step_size, Fm, Tm)).reshape((1,13))
+	#state[:,n+1] = (slv.rk42(state_now, step_size, Fm, Tm)).reshape((1,13))
+	state[:,n+1] = (slv.rk43(state_now, step_size, B, s_time)).reshape((1,13))
 	s_time = s_time + step_size
 	r[n+1] = np.linalg.norm(state[0:3,n+1])
 	q = state[6:10,n+1].reshape((4,1))	
