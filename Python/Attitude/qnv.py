@@ -21,6 +21,7 @@ def cross1(v1,v2):
 def quatInv(q):
 	#to get inverse of a quaternion
 	#print q
+	#in the indexing, last index value is excluded
 	qi = np.vstack((q[0:1],-1*q[1:4]))
 	
 	return qi
