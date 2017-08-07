@@ -8,7 +8,7 @@ M=5.972e24; #mass of earth, kg
 R=6371.8e3; #radius of earth, m
 day = dt.datetime(2017,5,30)
 L = 100. #length of tether in m
-v_L_b = L*np.array([[0.], [0.], [1.]])
+v_L_b = L*np.array([[0.], [0.], [1.]]) #tether vector in body frame
 
 b = 1e-3
 nLb = 1.
