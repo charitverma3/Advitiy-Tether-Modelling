@@ -26,7 +26,7 @@ dL = L/nL;
 mu_r = 0.05*2; %resistance per unit length of tether, ohm/m
 %day = decyear(2017,5,30); %for igrfmagm
 day = datenum(2017,5,30); %for igrf1
-E = referenceSphere('earth', 'm'); %for NED to ECEF
+%E = referenceSphere('earth', 'm'); %for NED to ECEF
 %%
 F = [0,0,0];
 %vx = zeros(1,(time_f-time_i)/step_size +1,'double');

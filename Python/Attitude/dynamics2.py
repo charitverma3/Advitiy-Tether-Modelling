@@ -2,6 +2,7 @@ import numpy as np
 import qnv
 from constants import *
 import forceTorque as fT
+
 def dynamics2(state,v_Fb_i, v_Tb_b):
 #dynamic equations when magnetic field is assumend constant between t and t+dt for computational ease 
 	v_Fg_i, v_Tg_b = fT.gravityForceTorque(state)

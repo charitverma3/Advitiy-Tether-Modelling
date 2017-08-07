@@ -8,14 +8,17 @@ M=5.972e24; #mass of earth, kg
 R=6371.8e3; #radius of earth, m
 day = dt.datetime(2017,5,30)
 L = 100. #length of tether in m
-v_L_b = L*np.array([[0.], [0.], [1.]])
-
+v_L_b = L*np.array([[0., 0., 1.]])
+v_dL_cap_b = np.array(([0.,0.,1.]))
 b = 1e-3
 nLb = 1.
-nLg = 100.
+nLg = 1.
+dLg = L/nLg
+dLb = L/nLb
 Ms = 10.
-mu_m = 0.27/L
+mu_m = 0*0.27/L
 mu_r = 0.1
+dm = mu_m*dLg
 
 Ixxs = .17007470856
 Iyys = .17159934710
@@ -46,14 +49,14 @@ incl = math.radians(98)
 m_eu98 = np.array([[0.,0.,-1.], [math.cos(incl),math.sin(incl),0.], [math.sin(incl),-math.cos(incl),0.]])
 #m_eu0 = np.array([[0.,0.,-1.],[1.,0.,0.],[0,-1.,0.]])
 q0 = qnv.rotm2quat(m_eu98)
-q0 = q0.reshape((4,1))
-pos0 = np.array([[R + 5.1e5],[0.],[0.]])
+q0 = q0.reshape((4))
+pos0 = np.array([R + 5.1e5,0.,0.])
 dist0 = np.linalg.norm(pos0)
 #v0 = np.array([[0.],[math.sqrt(G*M/dist0)],[0.]])
-v0 = np.array([[0],[math.sqrt(G*M/dist0)*math.cos(math.radians(98))],[math.sqrt(G*M/dist0)*math.sin(math.radians(98))]])
-w0 = np.array([[0.],[-1*math.sqrt(G*M/dist0**3)],[0.]]) 
+v0 = np.array([0,math.sqrt(G*M/dist0)*math.cos(incl),math.sqrt(G*M/dist0)*math.sin(incl)])
+w0 = np.array([0.,-1*math.sqrt(G*M/dist0**3),0.]) 
 #w0 = np.array([[0.], [0.], [0.]])
-state0 = np.vstack((pos0,v0,q0,w0))
+state0 = np.hstack((pos0,v0,q0,w0))
 
 
 

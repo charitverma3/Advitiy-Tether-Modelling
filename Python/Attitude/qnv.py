@@ -21,9 +21,9 @@ def cross1(v1,v2):
 def quatInv(q):
 	#to get inverse of a quaternion
 	#print q
-	qi = np.vstack((q[0:1],-1*q[1:4]))
+	qi = np.hstack((q[0:1],-1*q[1:4]))
 	
-	return qi
+	return qi.reshape(4)
 
 
 def quatMultiply(q1,q2):
@@ -39,9 +39,9 @@ def quatMultiply(q1,q2):
 	a = a1*a2 - np.dot(b1,b2)
 	b = a1*b2 + a2*b1 + np.cross(b1,b2)
 
-	b = b.reshape((3,1))
+	b = b.reshape(3)
 
-	q = np.vstack((a,b))
+	q = np.hstack((a,b))
 
 	return q
 
@@ -49,7 +49,7 @@ def quatRotate(q,x):
 	
 	#rotates vecctor x by quaternion q
 	qi = quatInv(q)
-	y = np.vstack(([0.],x.copy()))
+	y = np.hstack(([0.],x.copy().reshape(3)))
 	y = quatMultiply(q,y)
 	y = quatMultiply(y,qi)
 
@@ -88,7 +88,7 @@ def rotm2quat(A):
 		q4 = (A[1,0] - A[0,1])/(4*q4)
 
 	q = np.array([q1,q2,q3,q4])
-	q = q.reshape((4,1))
+	q = q.reshape(4)
 	return q
 
 
