@@ -9,7 +9,7 @@ class Satellite:
 
 		self.time = time0
 		self.setState(state0)		
-
+		print "init"
 	def setState(self,state):
 
 		self.state = state.copy()
